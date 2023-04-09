@@ -1,0 +1,33 @@
+{
+  "name": "@johannesschaffer/lexical-utils",
+  "version": "1.0.0",
+  "description": "Utils around the Lexical editor",
+  "author": "Johannes Schaffer",
+  "license": "ISC",
+  "exports": {
+    "./utils": "./dist/utils/index.js",
+    "./nodes": "./dist/nodes/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "compile": "tsc --build",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@lexical/headless": "^0.9.1",
+    "@lexical/html": "^0.9.1",
+    "@lexical/list": "^0.9.1",
+    "@lexical/rich-text": "^0.9.1",
+    "@johannesschaffer/utils": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.7",
+    "lexical": "^0.9.1",
+    "rimraf": "^4.4.1",
+    "typescript": "latest",
+    "utility-types": "^3.10.0"
+  }
+}
