@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v3.1.1
+- fix: Link & AutoLink nodes: because of wrong typings I used .url instead of .attributes.url
+
 ## v3.1.0
 - feat: add AutoLink node
 

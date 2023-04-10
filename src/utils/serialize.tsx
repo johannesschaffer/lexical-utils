@@ -80,8 +80,10 @@ export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, co
     
         if (isLineBreakNode(node)) return <br className={theme.linebreak}/>
         if (isParagraphNode(node)) return <p className={theme.paragraph}>{children}</p>
-        if (isLinkNode(node)) return <a href={node.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
-        if (isAutoLinkNode(node)) return <a href={node.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
+        // TODO: Lexicals typings are wrong for link. It's .attributes.url, not just .url
+        if (isLinkNode(node)) return <a href={(node as any).attributes.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
+        // TODO: Lexicals typings are wrong for autolink. It's .attributes.url, not just .url
+        if (isAutoLinkNode(node)) return <a href={(node as any).attributes.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
         if (isHeadingNode(node)) {
             switch (node.tag) {
                 case "h1": return <h1 className={theme.heading?.h1}>{children}</h1>
