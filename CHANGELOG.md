@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v3.3.0
+- feat: add getText()
+
 ## v3.2.0
 - feat: export ThemeClasses
 - fix: don't use escapeHTML since it replaces apostrohpes
