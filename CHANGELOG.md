@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v3.1.0
+- feat: add AutoLink node
+
 ## v3.0.1
 - chore: add repository to package.json
 

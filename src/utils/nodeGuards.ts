@@ -5,7 +5,7 @@ import type {
     SerializedParagraphNode,
     SerializedTextNode
 } from "lexical";
-import type {SerializedLinkNode} from "@lexical/link";
+import type {SerializedAutoLinkNode, SerializedLinkNode} from "@lexical/link";
 import type {SerializedListItemNode, SerializedListNode} from "@lexical/list";
 import type {SerializedHeadingNode, SerializedQuoteNode} from "@lexical/rich-text";
 
@@ -15,6 +15,7 @@ export const isTextNode = (node: SerializedLexicalNode): node is SerializedTextN
 export const isParagraphNode = (node: SerializedLexicalNode): node is SerializedParagraphNode => node.type == 'paragraph'
 export const isLineBreakNode = (node: SerializedLexicalNode): node is SerializedLineBreakNode => node.type == 'linebreak'
 export const isLinkNode = (node: SerializedLexicalNode): node is SerializedLinkNode => node.type == 'link'
+export const isAutoLinkNode = (node: SerializedLexicalNode): node is SerializedAutoLinkNode => node.type == 'autolink'
 export const isListNode = (node: SerializedLexicalNode): node is SerializedListNode => node.type == 'list'
 export const isListItemNode = (node: SerializedLexicalNode): node is SerializedListItemNode => node.type == 'listitem'
 export const isHeadingNode = (node: SerializedLexicalNode): node is SerializedHeadingNode => node.type == 'heading'

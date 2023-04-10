@@ -5,10 +5,9 @@ import {isHeadingNode, isTextNode} from "./nodeGuards";
 const getHeadingText = (heading: SerializedHeadingNode) => (
     // Multiple children when headings has multiple lines (Shift + Enter)
     heading.children.reduce((text, node) => {
-            if (isTextNode(node)) return text + node.text
-            throw new Error(`Find headings: Node of type ${node.type} isn't yet supported as a child of a heading`)
-        }, ''
-    )
+        if (isTextNode(node)) return text + node.text
+        throw new Error(`Find headings: Node of type ${node.type} isn't yet supported as a child of a heading`)
+    }, '')
 )
 
 /**

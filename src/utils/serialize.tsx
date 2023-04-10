@@ -6,6 +6,7 @@ import {
     IS_UNDERLINE
 } from "../helpers/LexicalConstants";
 import {
+    isAutoLinkNode,
     isElementNode, isHeadingNode,
     isLineBreakNode,
     isLinkNode,
@@ -62,7 +63,7 @@ interface Config {
 export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}) => {
     const textNode = (node: SerializedTextNode) => {
         const text = escapeHTML(node.text)
-        const style = cssToJSX(node.style)
+        const style = cssToJSX(node.style) // color, background-color, font-size
         
         if (node.format & IS_BOLD) return <strong style={style} className={theme.text?.bold}>{text}</strong>
         if (node.format & IS_ITALIC) return <em style={style} className={theme.text?.italic}>{text}</em>
@@ -80,6 +81,7 @@ export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, co
         if (isLineBreakNode(node)) return <br className={theme.linebreak}/>
         if (isParagraphNode(node)) return <p className={theme.paragraph}>{children}</p>
         if (isLinkNode(node)) return <a href={node.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
+        if (isAutoLinkNode(node)) return <a href={node.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
         if (isHeadingNode(node)) {
             switch (node.tag) {
                 case "h1": return <h1 className={theme.heading?.h1}>{children}</h1>
