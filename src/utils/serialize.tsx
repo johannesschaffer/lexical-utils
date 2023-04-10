@@ -12,7 +12,7 @@ import {
     isListItemNode,
     isListNode,
     isParagraphNode, isQuoteNode, isTextNode
-} from "../helpers/nodeGuards";
+} from "./nodeGuards";
 import escapeHTML from 'escape-html';
 import type {SerializedLexicalNode, SerializedRootNode, SerializedTextNode} from 'lexical';
 import {cssToJSX} from "../helpers/cssToJSX";

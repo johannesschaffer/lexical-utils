@@ -1,6 +1,6 @@
 import type {SerializedRootNode} from "lexical";
 import type {SerializedHeadingNode} from "@lexical/rich-text";
-import {isHeadingNode, isTextNode} from "../helpers/nodeGuards";
+import {isHeadingNode, isTextNode} from "./nodeGuards";
 
 const getHeadingText = (heading: SerializedHeadingNode) => (
     // Multiple children when headings has multiple lines (Shift + Enter)
