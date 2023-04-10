@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v3.2.0
+- feat: export ThemeClasses
+- fix: don't use escapeHTML since it replaces apostrohpes
+
 ## v3.1.1
 - fix: Link & AutoLink nodes: because of wrong typings I used .url instead of .attributes.url
 

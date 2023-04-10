@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/johannesschaffer/lexical-utils"
   },
-  "version": "3.1.1",
+  "version": "3.2.0",
   "exports": {
     "./utils": "./dist/utils/index.js",
     "./nodes": "./dist/nodes/index.js"
