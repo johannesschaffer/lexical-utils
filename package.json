@@ -1,6 +1,6 @@
 {
   "name": "@johannesschaffer/lexical-utils",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Utils around the Lexical editor",
   "author": "Johannes Schaffer",
   "license": "ISC",

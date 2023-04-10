@@ -54,6 +54,11 @@ export interface ThemeClasses {
 interface Config {
     openLinkInSameTab?: boolean
 }
+/**
+ * Serialize the lexical editor state to JSX
+ * @param root The root node of the editor state. A Javascript object, not stringified JSON! - E.g. JSON.parse(stateFromCMS).root
+ * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
+ * @param config*/
 export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}) => {
     const textNode = (node: SerializedTextNode) => {
         const text = escapeHTML(node.text)
