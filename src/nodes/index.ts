@@ -1,1 +1,1 @@
-export {AnchorHeadingNode} from "./anchor-heading"
+export {AnchorHeadingNode} from "./AnchorHeadingNode"

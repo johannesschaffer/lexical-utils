@@ -1,2 +1,2 @@
-export {serializeToHTML} from "./serialize-to-html"
-export {findHeadings} from "./find-headings"
+export {serialize} from "./serialize"
+export {findHeadings} from "./findHeadings"

@@ -1,6 +1,6 @@
 {
   "name": "@johannesschaffer/lexical-utils",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Utils around the Lexical editor",
   "author": "Johannes Schaffer",
   "license": "ISC",
@@ -17,17 +17,22 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@lexical/headless": "^0.9.1",
-    "@lexical/html": "^0.9.1",
-    "@lexical/list": "^0.9.1",
-    "@lexical/rich-text": "^0.9.1",
-    "@johannesschaffer/utils": "^1.1.2"
+    "@johannesschaffer/utils": "^1.1.2",
+    "escape-html": "^1.0.3",
+    "camelcase": "^7.0.1"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
   },
   "devDependencies": {
+    "@lexical/link": "^0.9.1",
+    "@lexical/list": "^0.9.1",
+    "@lexical/rich-text": "^0.9.1",
+    "@types/escape-html": "^1.0.2",
     "@types/node": "^18.15.7",
+    "@types/react": "^18.0.34",
     "lexical": "^0.9.1",
     "rimraf": "^4.4.1",
-    "typescript": "latest",
-    "utility-types": "^3.10.0"
+    "typescript": "latest"
   }
 }
