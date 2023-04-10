@@ -14,7 +14,6 @@ import {
     isListNode,
     isParagraphNode, isQuoteNode, isTextNode
 } from "./nodeGuards";
-import escapeHTML from 'escape-html';
 import type {SerializedLexicalNode, SerializedRootNode, SerializedTextNode} from 'lexical';
 import {cssToJSX} from "../helpers/cssToJSX";
 import {Fragment} from "react";
@@ -62,7 +61,8 @@ interface Config {
  * @param config*/
 export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}) => {
     const textNode = (node: SerializedTextNode) => {
-        const text = escapeHTML(node.text)
+        // Don't use escapeHTML() -> Escapes apostrophes
+        const text = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
         
         if (node.format & IS_BOLD) return <strong style={style} className={theme.text?.bold}>{text}</strong>
