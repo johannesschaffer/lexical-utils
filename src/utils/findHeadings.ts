@@ -1,11 +1,14 @@
-import type {SerializedTextNode, SerializedRootNode} from "lexical";
+import type {SerializedRootNode} from "lexical";
 import type {SerializedHeadingNode} from "@lexical/rich-text";
-import {isHeadingNode} from "../helpers/nodeGuards";
+import {isHeadingNode, isTextNode} from "../helpers/nodeGuards";
 
 const getHeadingText = (heading: SerializedHeadingNode) => (
     // Multiple children when headings has multiple lines (Shift + Enter)
-    (heading.children as SerializedTextNode[])
-        .reduce((prev, curr) => prev + curr.text, '')
+    heading.children.reduce((text, node) => {
+            if (isTextNode(node)) return text + node.text
+            throw new Error(`Find headings: Node of type ${node.type} isn't yet supported as a child of a heading`)
+        }, ''
+    )
 )
 
 /**
