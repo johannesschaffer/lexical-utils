@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v3.0.1
+- chore: add repository to package.json
+
 ## v3.0.0
 - doc: add serialize() documentation
 - feat!: change findHeadings() api & refine implementation & doc it

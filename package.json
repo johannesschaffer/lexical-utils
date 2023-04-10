@@ -1,9 +1,13 @@
 {
   "name": "@johannesschaffer/lexical-utils",
-  "version": "3.0.0",
   "description": "Utils around the Lexical editor",
   "author": "Johannes Schaffer",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johannesschaffer/lexical-utils"
+  },
+  "version": "3.0.1",
   "exports": {
     "./utils": "./dist/utils/index.js",
     "./nodes": "./dist/nodes/index.js"
