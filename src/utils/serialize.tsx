@@ -84,13 +84,19 @@ interface Elems {
     Quote?: ComponentType<ElemProps>
 }
 
+interface Props {
+    root: SerializedRootNode
+    theme?: ThemeClasses
+    config?: Config
+    elems?: Elems
+}
 /**
  * Serialize the lexical editor state to JSX
  * @param root The root node of the editor state. A Javascript object, not stringified JSON
  * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
  * @param config Options by default falsy
  * @param elems*/
-export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}, elems: Elems = {}) => {
+export const serialize = ({root, theme = {}, config = {}, elems = {}}: Props) => {
     const textNode = (node: SerializedTextNode) => {
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
