@@ -16,7 +16,7 @@ import {
 } from "./nodeGuards";
 import type {SerializedLexicalNode, SerializedRootNode, SerializedTextNode} from 'lexical';
 import {cssToJSX} from "../helpers/cssToJSX";
-import {Fragment} from "react";
+import {ComponentType, createElement, CSSProperties, Fragment, ReactNode} from "react";
 
 // Inspired by EditorThemeClasses from lexical -> Potentially easier to migrate to lexical/headless serializer
 // Based on Lexical Node types rather than HTML tags
@@ -54,56 +54,90 @@ export interface ThemeClasses {
 interface Config {
     openLinkInSameTab?: boolean
 }
+
+interface ElemProps {children?: ReactNode, className?: string | undefined}
+interface TextElemProps extends ElemProps {style?: CSSProperties}
+interface LinkProps extends ElemProps {href: string, target?: string}
+// Same names as ThemeConfig
+interface Elems {
+    Base?: ComponentType<TextElemProps>
+    Bold?: ComponentType<TextElemProps>
+    Italic?: ComponentType<TextElemProps>
+    Underline?: ComponentType<TextElemProps>
+    Strikethrough?: ComponentType<TextElemProps>
+    Code?: ComponentType<TextElemProps>
+    Subscript?: ComponentType<TextElemProps>
+    Superscript?: ComponentType<TextElemProps>
+    LineBreak?: ComponentType<ElemProps>
+    Paragraph?: ComponentType<ElemProps>
+    Link?: ComponentType<LinkProps>
+    H1?: ComponentType<ElemProps>
+    H2?: ComponentType<ElemProps>
+    H3?: ComponentType<ElemProps>
+    H4?: ComponentType<ElemProps>
+    H5?: ComponentType<ElemProps>
+    H6?: ComponentType<ElemProps>
+    BulletList?: ComponentType<ElemProps>
+    NumberList?: ComponentType<ElemProps>
+    CheckList?: ComponentType<ElemProps>
+    ListItem?: ComponentType<ElemProps>
+    Quote?: ComponentType<ElemProps>
+}
+
 /**
  * Serialize the lexical editor state to JSX
  * @param root The root node of the editor state. A Javascript object, not stringified JSON
  * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
- * @param config Options by default falsy*/
-export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}) => {
+ * @param config Options by default falsy
+ * @param elems*/
+export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}, elems: Elems = {}) => {
     const textNode = (node: SerializedTextNode) => {
-        // Don't use escapeHTML() -> Escapes apostrophes
-        const text = node.text
+        const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
         
-        if (node.format === IS_BOLD) return <strong style={style} className={theme.text?.bold}>{text}</strong>
-        if (node.format === IS_ITALIC) return <em style={style} className={theme.text?.italic}>{text}</em>
-        if (node.format === IS_UNDERLINE) return <u style={style} className={theme.text?.underline}>{text}</u>
-        if (node.format === IS_STRIKETHROUGH) return <s style={style} className={theme.text?.strikethrough}>{text}</s>
-        if (node.format === IS_CODE) return <code style={style} className={theme.text?.code}>{text}</code>
-        if (node.format === IS_SUBSCRIPT) return <sub style={style} className={theme.text?.subscript}>{text}</sub>
-        if (node.format === IS_SUPERSCRIPT) return <sup style={style} className={theme.text?.superscript}>{text}</sup>
-        return <span style={style} className={theme.text?.base}>{text}</span>
+        if (node.format === IS_BOLD)
+            return createElement(elems.Bold ?? "strong", {children, style, className: theme.text?.bold})
+        if (node.format === IS_ITALIC)
+            return createElement(elems.Italic ?? "em", {children, style, className: theme.text?.italic})
+        if (node.format === IS_UNDERLINE)
+            return createElement(elems.Underline ?? "u", {children, style, className: theme.text?.underline})
+        if (node.format === IS_STRIKETHROUGH)
+            return createElement(elems.Strikethrough ?? "s", {children, style, className: theme.text?.strikethrough})
+        if (node.format === IS_CODE)
+            return createElement(elems.Code ?? "code", {children, style, className: theme.text?.code})
+        if (node.format === IS_SUBSCRIPT)
+            return createElement(elems.Subscript ?? "sub", {children, style, className: theme.text?.subscript})
+        if (node.format === IS_SUPERSCRIPT)
+            return createElement(elems.Superscript ?? "sup", {children, style, className: theme.text?.superscript})
+        return createElement(elems.Base ?? "span", {children, style, className: theme.text?.base})
     }
     
     const elemNode = (node: SerializedLexicalNode) => {
         const children = serializeToJSX(node)
     
-        if (isLineBreakNode(node)) return <br className={theme.linebreak}/>
-        if (isParagraphNode(node)) return <p className={theme.paragraph}>{children}</p>
+        if (isLineBreakNode(node)) return createElement(elems.LineBreak ?? "br", {className: theme.linebreak})
+        if (isParagraphNode(node)) return createElement(elems.Paragraph ?? "p", {children, className: theme.paragraph})
         // TODO: Lexicals typings are wrong for link. It's .attributes.url, not just .url
-        if (isLinkNode(node)) return <a href={(node as any).attributes.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
-        // TODO: Lexicals typings are wrong for autolink. It's .attributes.url, not just .url
-        if (isAutoLinkNode(node)) return <a href={(node as any).attributes.url} target={!config.openLinkInSameTab ? '_blank' : ''} className={theme.link}>{children}</a>
+        if (isLinkNode(node) || isAutoLinkNode(node)) return createElement(elems.Link ?? "a", {children, className: theme.link, href: (node as any).attributes.url, target: !config.openLinkInSameTab ? '_blank' : ''})
         if (isHeadingNode(node)) {
             switch (node.tag) {
-                case "h1": return <h1 className={theme.heading?.h1}>{children}</h1>
-                case "h2": return <h2 className={theme.heading?.h2}>{children}</h2>
-                case "h3": return <h3 className={theme.heading?.h3}>{children}</h3>
-                case "h4": return <h4 className={theme.heading?.h4}>{children}</h4>
-                case "h5": return <h5 className={theme.heading?.h5}>{children}</h5>
-                case "h6": return <h6 className={theme.heading?.h6}>{children}</h6>
-            
+                case "h1": return createElement(elems.H1 ?? 'h1', {children, className: theme.heading?.h1})
+                case "h2": return createElement(elems.H2 ?? 'h2', {children, className: theme.heading?.h2})
+                case "h3": return createElement(elems.H3 ?? 'h3', {children, className: theme.heading?.h3})
+                case "h4": return createElement(elems.H4 ?? 'h4', {children, className: theme.heading?.h4})
+                case "h5": return createElement(elems.H5 ?? 'h5', {children, className: theme.heading?.h5})
+                case "h6": return createElement(elems.H6 ?? 'h6', {children, className: theme.heading?.h6})
             }
         }
         if (isListNode(node)) {
             switch (node.listType) {
-                case "bullet": return <ul className={theme.list?.bullet}>{children}</ul>
-                case "number": return <ol className={theme.list?.number}>{children}</ol>
-                case "check": return <ul className={theme.list?.check}>{children}</ul> // Playground implementation
+                case "bullet": return createElement(elems.BulletList ?? "ul", {children, className: theme.list?.bullet})
+                case "number": return createElement(elems.NumberList ?? "ol", {children, className: theme.list?.number})
+                case "check": return createElement(elems.CheckList ?? "ul", {children, className: theme.list?.check}) // Playground implementation
             }
         }
-        if (isListItemNode(node)) return <li className={theme.list?.listitem}>{children}</li>
-        if (isQuoteNode(node)) return <blockquote className={theme.quote}>{children}</blockquote>
+        if (isListItemNode(node)) return createElement(elems.ListItem ?? "li", {children, className: theme.list?.listitem})
+        if (isQuoteNode(node)) return createElement(elems.Quote ?? '"blockquote', {children, className: theme.quote})
         throw new Error(`Serializer: Node of type ${node.type} isn't implemented yet`)
     }
     
