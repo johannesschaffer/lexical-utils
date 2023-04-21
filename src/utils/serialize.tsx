@@ -65,13 +65,13 @@ export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, co
         const text = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
         
-        if (node.format & IS_BOLD) return <strong style={style} className={theme.text?.bold}>{text}</strong>
-        if (node.format & IS_ITALIC) return <em style={style} className={theme.text?.italic}>{text}</em>
-        if (node.format & IS_UNDERLINE) return <u style={style} className={theme.text?.underline}>{text}</u>
-        if (node.format & IS_STRIKETHROUGH) return <s style={style} className={theme.text?.strikethrough}>{text}</s>
-        if (node.format & IS_CODE) return <code style={style} className={theme.text?.code}>{text}</code>
-        if (node.format & IS_SUBSCRIPT) return <sub style={style} className={theme.text?.subscript}>{text}</sub>
-        if (node.format & IS_SUPERSCRIPT) return <sup style={style} className={theme.text?.superscript}>{text}</sup>
+        if (node.format === IS_BOLD) return <strong style={style} className={theme.text?.bold}>{text}</strong>
+        if (node.format === IS_ITALIC) return <em style={style} className={theme.text?.italic}>{text}</em>
+        if (node.format === IS_UNDERLINE) return <u style={style} className={theme.text?.underline}>{text}</u>
+        if (node.format === IS_STRIKETHROUGH) return <s style={style} className={theme.text?.strikethrough}>{text}</s>
+        if (node.format === IS_CODE) return <code style={style} className={theme.text?.code}>{text}</code>
+        if (node.format === IS_SUBSCRIPT) return <sub style={style} className={theme.text?.subscript}>{text}</sub>
+        if (node.format === IS_SUPERSCRIPT) return <sup style={style} className={theme.text?.superscript}>{text}</sup>
         return <span style={style} className={theme.text?.base}>{text}</span>
     }
     
