@@ -101,21 +101,16 @@ export const serialize = ({root, theme = {}, config = {}, elems = {}}: Props) =>
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
         
-        if (node.format === IS_BOLD)
-            return createElement(elems.Bold ?? "strong", {children, style, className: theme.text?.bold})
-        if (node.format === IS_ITALIC)
-            return createElement(elems.Italic ?? "em", {children, style, className: theme.text?.italic})
-        if (node.format === IS_UNDERLINE)
-            return createElement(elems.Underline ?? "u", {children, style, className: theme.text?.underline})
-        if (node.format === IS_STRIKETHROUGH)
-            return createElement(elems.Strikethrough ?? "s", {children, style, className: theme.text?.strikethrough})
-        if (node.format === IS_CODE)
-            return createElement(elems.Code ?? "code", {children, style, className: theme.text?.code})
-        if (node.format === IS_SUBSCRIPT)
-            return createElement(elems.Subscript ?? "sub", {children, style, className: theme.text?.subscript})
-        if (node.format === IS_SUPERSCRIPT)
-            return createElement(elems.Superscript ?? "sup", {children, style, className: theme.text?.superscript})
-        return createElement(elems.Base ?? "span", {children, style, className: theme.text?.base})
+        switch (node.format) {
+            case IS_BOLD: return createElement(elems.Bold ?? "strong", {children, style, className: theme.text?.bold})
+            case IS_ITALIC: return createElement(elems.Italic ?? "em", {children, style, className: theme.text?.italic})
+            case IS_UNDERLINE: return createElement(elems.Underline ?? "u", {children, style, className: theme.text?.underline})
+            case IS_STRIKETHROUGH: return createElement(elems.Strikethrough ?? "s", {children, style, className: theme.text?.strikethrough})
+            case IS_CODE: return createElement(elems.Code ?? "code", {children, style, className: theme.text?.code})
+            case IS_SUBSCRIPT: return createElement(elems.Subscript ?? "sub", {children, style, className: theme.text?.subscript})
+            case IS_SUPERSCRIPT: return createElement(elems.Superscript ?? "sup", {children, style, className: theme.text?.superscript})
+            default: return createElement(elems.Base ?? "span", {children, style, className: theme.text?.base})
+        }
     }
     
     const elemNode = (node: SerializedLexicalNode) => {
