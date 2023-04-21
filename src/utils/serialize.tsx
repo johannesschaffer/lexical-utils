@@ -56,9 +56,9 @@ interface Config {
 }
 /**
  * Serialize the lexical editor state to JSX
- * @param root The root node of the editor state. A Javascript object, not stringified JSON! - E.g. JSON.parse(stateFromCMS).root
+ * @param root The root node of the editor state. A Javascript object, not stringified JSON
  * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
- * @param config*/
+ * @param config Options by default falsy*/
 export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, config: Config = {}) => {
     const textNode = (node: SerializedTextNode) => {
         // Don't use escapeHTML() -> Escapes apostrophes
