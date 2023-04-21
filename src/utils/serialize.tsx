@@ -75,7 +75,7 @@ export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, co
         return <span style={style} className={theme.text?.base}>{text}</span>
     }
     
-    const miscNode = (node: SerializedLexicalNode) => {
+    const elemNode = (node: SerializedLexicalNode) => {
         const children = serializeToJSX(node)
     
         if (isLineBreakNode(node)) return <br className={theme.linebreak}/>
@@ -111,7 +111,7 @@ export const serialize = (root: SerializedRootNode, theme: ThemeClasses = {}, co
         if (!isElementNode(node)) return [<></>]
         return node.children.map((node, key) => (
             <Fragment key={key}>
-                {isTextNode(node) ? textNode(node) : miscNode(node)}
+                {isTextNode(node) ? textNode(node) : elemNode(node)}
             </Fragment>
         ))
     }
