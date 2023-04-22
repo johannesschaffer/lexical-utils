@@ -14,7 +14,7 @@ import {
     isListNode,
     isParagraphNode, isQuoteNode, isTextNode
 } from "./nodeGuards";
-import type {SerializedLexicalNode, SerializedRootNode, SerializedTextNode} from 'lexical';
+import type {SerializedElementNode, SerializedLexicalNode, SerializedRootNode, SerializedTextNode} from 'lexical';
 import {cssToJSX} from "../helpers/cssToJSX";
 import {ComponentType, createElement, CSSProperties, Fragment, ReactNode} from "react";
 
@@ -87,68 +87,76 @@ interface Elems {
 interface Props {
     root: SerializedRootNode
     theme?: ThemeClasses
-    config?: Config
     elems?: Elems
+    config?: Config
+    onNode?: {
+        type: string,
+        func: (node: SerializedElementNode & Record<any, any>, children: JSX.Element[]) => void // Record<any, any> so can access other properties like "tag" for heading
+    }[]
 }
 /**
- * Serialize the lexical editor state to JSX
+ * Serialize the Lexical editor state to JSX
  * @param root The root node of the editor state. A Javascript object, not stringified JSON
  * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
+ * @param elems Replace the standard elements with custom ones
  * @param config Options by default falsy
- * @param elems*/
-export const serialize = ({root, theme = {}, config = {}, elems = {}}: Props) => {
+ * @param onNode Functions that run after a certain node is serialized*/
+export const serialize = ({root, theme, elems, config, onNode}: Props) => {
     const textNode = (node: SerializedTextNode) => {
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
-        
         switch (node.format) {
-            case IS_BOLD: return createElement(elems.Bold ?? "strong", {children, style, className: theme.text?.bold})
-            case IS_ITALIC: return createElement(elems.Italic ?? "em", {children, style, className: theme.text?.italic})
-            case IS_UNDERLINE: return createElement(elems.Underline ?? "u", {children, style, className: theme.text?.underline})
-            case IS_STRIKETHROUGH: return createElement(elems.Strikethrough ?? "s", {children, style, className: theme.text?.strikethrough})
-            case IS_CODE: return createElement(elems.Code ?? "code", {children, style, className: theme.text?.code})
-            case IS_SUBSCRIPT: return createElement(elems.Subscript ?? "sub", {children, style, className: theme.text?.subscript})
-            case IS_SUPERSCRIPT: return createElement(elems.Superscript ?? "sup", {children, style, className: theme.text?.superscript})
-            default: return createElement(elems.Base ?? "span", {children, style, className: theme.text?.base})
+            case IS_BOLD: return createElement(elems?.Bold ?? "strong", {children, style, className: theme?.text?.bold})
+            case IS_ITALIC: return createElement(elems?.Italic ?? "em", {children, style, className: theme?.text?.italic})
+            case IS_UNDERLINE: return createElement(elems?.Underline ?? "u", {children, style, className: theme?.text?.underline})
+            case IS_STRIKETHROUGH: return createElement(elems?.Strikethrough ?? "s", {children, style, className: theme?.text?.strikethrough})
+            case IS_CODE: return createElement(elems?.Code ?? "code", {children, style, className: theme?.text?.code})
+            case IS_SUBSCRIPT: return createElement(elems?.Subscript ?? "sub", {children, style, className: theme?.text?.subscript})
+            case IS_SUPERSCRIPT: return createElement(elems?.Superscript ?? "sup", {children, style, className: theme?.text?.superscript})
+            default: return createElement(elems?.Base ?? "span", {children, style, className: theme?.text?.base})
         }
     }
     
     const elemNode = (node: SerializedLexicalNode) => {
         const children = serializeToJSX(node)
     
-        if (isLineBreakNode(node)) return createElement(elems.LineBreak ?? "br", {className: theme.linebreak})
-        if (isParagraphNode(node)) return createElement(elems.Paragraph ?? "p", {children, className: theme.paragraph})
+        if (isLineBreakNode(node)) return createElement(elems?.LineBreak ?? "br", {className: theme?.linebreak})
+        if (isParagraphNode(node)) return createElement(elems?.Paragraph ?? "p", {children, className: theme?.paragraph})
         // TODO: Lexicals typings are wrong for link. It's .attributes.url, not just .url
-        if (isLinkNode(node) || isAutoLinkNode(node)) return createElement(elems.Link ?? "a", {children, className: theme.link, href: (node as any).attributes.url, target: !config.openLinkInSameTab ? '_blank' : ''})
+        if (isLinkNode(node) || isAutoLinkNode(node)) return createElement(elems?.Link ?? "a", {children, className: theme?.link, href: (node as any).attributes.url, target: !config?.openLinkInSameTab ? '_blank' : ''})
         if (isHeadingNode(node)) {
             switch (node.tag) {
-                case "h1": return createElement(elems.H1 ?? 'h1', {children, className: theme.heading?.h1})
-                case "h2": return createElement(elems.H2 ?? 'h2', {children, className: theme.heading?.h2})
-                case "h3": return createElement(elems.H3 ?? 'h3', {children, className: theme.heading?.h3})
-                case "h4": return createElement(elems.H4 ?? 'h4', {children, className: theme.heading?.h4})
-                case "h5": return createElement(elems.H5 ?? 'h5', {children, className: theme.heading?.h5})
-                case "h6": return createElement(elems.H6 ?? 'h6', {children, className: theme.heading?.h6})
+                case "h1": return createElement(elems?.H1 ?? 'h1', {children, className: theme?.heading?.h1})
+                case "h2": return createElement(elems?.H2 ?? 'h2', {children, className: theme?.heading?.h2})
+                case "h3": return createElement(elems?.H3 ?? 'h3', {children, className: theme?.heading?.h3})
+                case "h4": return createElement(elems?.H4 ?? 'h4', {children, className: theme?.heading?.h4})
+                case "h5": return createElement(elems?.H5 ?? 'h5', {children, className: theme?.heading?.h5})
+                case "h6": return createElement(elems?.H6 ?? 'h6', {children, className: theme?.heading?.h6})
             }
         }
         if (isListNode(node)) {
             switch (node.listType) {
-                case "bullet": return createElement(elems.BulletList ?? "ul", {children, className: theme.list?.bullet})
-                case "number": return createElement(elems.NumberList ?? "ol", {children, className: theme.list?.number})
-                case "check": return createElement(elems.CheckList ?? "ul", {children, className: theme.list?.check}) // Playground implementation
+                case "bullet": return createElement(elems?.BulletList ?? "ul", {children, className: theme?.list?.bullet})
+                case "number": return createElement(elems?.NumberList ?? "ol", {children, className: theme?.list?.number})
+                case "check": return createElement(elems?.CheckList ?? "ul", {children, className: theme?.list?.check}) // Playground implementation
             }
         }
-        if (isListItemNode(node)) return createElement(elems.ListItem ?? "li", {children, className: theme.list?.listitem})
-        if (isQuoteNode(node)) return createElement(elems.Quote ?? '"blockquote', {children, className: theme.quote})
+        if (isListItemNode(node)) return createElement(elems?.ListItem ?? "li", {children, className: theme?.list?.listitem})
+        if (isQuoteNode(node)) return createElement(elems?.Quote ?? '"blockquote', {children, className: theme?.quote})
         throw new Error(`Serializer: Node of type ${node.type} isn't implemented yet`)
     }
     
     const serializeToJSX = (node: SerializedLexicalNode): JSX.Element[] => {
         if (!isElementNode(node)) return [<></>]
-        return node.children.map((node, key) => (
+        const children = node.children.map((node, key) => (
             <Fragment key={key}>
                 {isTextNode(node) ? textNode(node) : elemNode(node)}
             </Fragment>
         ))
+        onNode
+            ?.filter(it => it.type == node.type)
+            .forEach(it => it.func(node, children))
+        return children
     }
     
     return serializeToJSX(root)
