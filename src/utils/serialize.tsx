@@ -51,10 +51,6 @@ export interface ThemeClasses {
     quote?: string
 }
 
-interface Config {
-    openLinkInSameTab?: boolean
-}
-
 interface ElemProps {children?: ReactNode, className?: string | undefined}
 interface TextElemProps extends ElemProps {style?: CSSProperties}
 interface LinkProps extends ElemProps {href: string, target?: string}
@@ -87,7 +83,7 @@ interface Elems {
 export interface SerializeOptions {
     theme?: ThemeClasses
     elems?: Elems
-    config?: Config
+    openLinkInSameTab?: boolean
     onNode?: {
         type: string,
         func: (node: SerializedElementNode & Record<any, any>, children: JSX.Element[]) => void // Record<any, any> so can access other properties like "tag" for heading
@@ -98,12 +94,13 @@ export interface SerializeOptions {
  * @param root The root node of the editor state. A Javascript object, not stringified JSON
  * @param theme CSS classes - Multiple classes can be supplied (e.g. to use Tailwind)
  * @param elems Replace the standard elements with custom ones
- * @param config Options by default falsy
+ * @param openLinkInSameTab By default falsy
  * @param onNode Functions that run after a certain node is serialized*/
-export const serialize = (root: SerializedRootNode, {theme, elems, config, onNode}: SerializeOptions) => {
+export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSameTab, onNode}: SerializeOptions) => {
     const textNode = (node: SerializedTextNode) => {
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
+        
         switch (node.format) {
             case IS_BOLD: return createElement(elems?.Bold ?? "strong", {children, style, className: theme?.text?.bold})
             case IS_ITALIC: return createElement(elems?.Italic ?? "em", {children, style, className: theme?.text?.italic})
@@ -122,7 +119,7 @@ export const serialize = (root: SerializedRootNode, {theme, elems, config, onNod
         if (isLineBreakNode(node)) return createElement(elems?.LineBreak ?? "br", {className: theme?.linebreak})
         if (isParagraphNode(node)) return createElement(elems?.Paragraph ?? "p", {children, className: theme?.paragraph})
         // TODO: Lexicals typings are wrong for link. It's .attributes.url, not just .url
-        if (isLinkNode(node) || isAutoLinkNode(node)) return createElement(elems?.Link ?? "a", {children, className: theme?.link, href: (node as any).attributes.url, target: !config?.openLinkInSameTab ? '_blank' : ''})
+        if (isLinkNode(node) || isAutoLinkNode(node)) return createElement(elems?.Link ?? "a", {children, className: theme?.link, href: (node as any).attributes.url, target: !openLinkInSameTab ? '_blank' : ''})
         if (isHeadingNode(node)) {
             switch (node.tag) {
                 case "h1": return createElement(elems?.H1 ?? 'h1', {children, className: theme?.heading?.h1})
