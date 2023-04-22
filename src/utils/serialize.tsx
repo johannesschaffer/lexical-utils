@@ -86,7 +86,7 @@ export interface SerializeOptions {
     openLinkInSameTab?: boolean
     onNode?: {
         type: string,
-        func: (node: SerializedElementNode & Record<any, any>, children: JSX.Element[]) => void // Record<any, any> so can access other properties like "tag" for heading
+        func: (node: SerializedElementNode & Record<any, any>, comp: JSX.Element) => void // Record<any, any> so can access other properties like "tag" for heading
     }[]
 }
 /**
@@ -144,15 +144,12 @@ export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSam
     
     const serializeToJSX = (node: SerializedLexicalNode): JSX.Element[] => {
         if (!isElementNode(node)) return [<></>]
-        const children = node.children.map((node, key) => (
-            <Fragment key={key}>
-                {isTextNode(node) ? textNode(node) : elemNode(node)}
-            </Fragment>
-        ))
-        onNode
-            ?.filter(it => it.type == node.type)
-            .forEach(it => it.func(node, children))
-        return children
+        const callbacks = onNode?.filter(it => it.type == node.type) ?? []
+        return node.children.map((child, key) => {
+            const comp = isTextNode(child) ? textNode(child) : elemNode(child)
+            callbacks.forEach(it => it.func(node, comp))
+            return <Fragment key={key}>{comp}</Fragment>
+        })
     }
     
     return serializeToJSX(root)
