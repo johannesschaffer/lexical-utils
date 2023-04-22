@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v4.0.0
+- feat!: serialize() - pass jsx element itself to onNode callback instead of its children
+- feat!: inline config options
+- feat!: serialize() - change params structure & export config interface
+- feat!: serialize() - takes object as argument instead of multiple arguments
+- feat: serialize() - add onNode param & improve null-safety
+- feat: serialize() - option to pass custom elements
+- fix: serialize() - make options parameter optional
+- refactor: serialize() - textNode() - use switch instead of if
+- refactor: serialize() - miscNode to elemNode
+- refactor: serialize - use === instead of binary &
+- build: add dev script
+- docs: serialize()
+
 ## v3.3.0
 - feat: add getText()
 
