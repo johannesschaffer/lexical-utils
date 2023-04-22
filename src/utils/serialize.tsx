@@ -84,8 +84,7 @@ interface Elems {
     Quote?: ComponentType<ElemProps>
 }
 
-interface Props {
-    root: SerializedRootNode
+export interface SerializeOptions {
     theme?: ThemeClasses
     elems?: Elems
     config?: Config
@@ -101,7 +100,7 @@ interface Props {
  * @param elems Replace the standard elements with custom ones
  * @param config Options by default falsy
  * @param onNode Functions that run after a certain node is serialized*/
-export const serialize = ({root, theme, elems, config, onNode}: Props) => {
+export const serialize = (root: SerializedRootNode, {theme, elems, config, onNode}: SerializeOptions) => {
     const textNode = (node: SerializedTextNode) => {
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
