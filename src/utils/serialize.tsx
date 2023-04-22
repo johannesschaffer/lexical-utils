@@ -96,7 +96,7 @@ export interface SerializeOptions {
  * @param elems Replace the standard elements with custom ones
  * @param openLinkInSameTab By default falsy
  * @param onNode Functions that run after a certain node is serialized*/
-export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSameTab, onNode}: SerializeOptions) => {
+export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSameTab, onNode}: SerializeOptions = {}) => {
     const textNode = (node: SerializedTextNode) => {
         const children = node.text
         const style = cssToJSX(node.style) // color, background-color, font-size
