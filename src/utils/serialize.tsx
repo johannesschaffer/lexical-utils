@@ -138,7 +138,7 @@ export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSam
             }
         }
         if (isListItemNode(node)) return createElement(elems?.ListItem ?? "li", {children, className: theme?.list?.listitem})
-        if (isQuoteNode(node)) return createElement(elems?.Quote ?? '"blockquote', {children, className: theme?.quote})
+        if (isQuoteNode(node)) return createElement(elems?.Quote ?? 'blockquote', {children, className: theme?.quote})
         throw new Error(`Serializer: Node of type ${node.type} isn't implemented yet`)
     }
     
