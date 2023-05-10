@@ -1,5 +1,5 @@
 import {
-    IS_BOLD,
+    IS_BOLD, IS_BOLD_AND_ITALIC,
     IS_CODE,
     IS_ITALIC,
     IS_STRIKETHROUGH, IS_SUBSCRIPT, IS_SUPERSCRIPT,
@@ -104,6 +104,11 @@ export const serialize = (root: SerializedRootNode, {theme, elems, openLinkInSam
         switch (node.format) {
             case IS_BOLD: return createElement(elems?.Bold ?? "strong", {children, style, className: theme?.text?.bold})
             case IS_ITALIC: return createElement(elems?.Italic ?? "em", {children, style, className: theme?.text?.italic})
+            case IS_BOLD_AND_ITALIC: return createElement(elems?.Bold ?? "strong", {
+                children: createElement(elems?.Italic ?? "em", {children, style, className: theme?.text?.italic}),
+                style,
+                className: theme?.text?.bold
+            })
             case IS_UNDERLINE: return createElement(elems?.Underline ?? "u", {children, style, className: theme?.text?.underline})
             case IS_STRIKETHROUGH: return createElement(elems?.Strikethrough ?? "s", {children, style, className: theme?.text?.strikethrough})
             case IS_CODE: return createElement(elems?.Code ?? "code", {children, style, className: theme?.text?.code})
