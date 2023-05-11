@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v4.0.1
+- fix: handle bold and italic simultaneous formatting
+- fix: correct element "blockquote spelling
+
 ## v4.0.0
 - feat!: serialize() - pass jsx element itself to onNode callback instead of its children
 - feat!: inline config options
